@@ -12,9 +12,11 @@ export default class View {
     constructor() {
         this.configureBtnUploadClick()
     }
+
     getCanvas() {
         return this.#canvas.transferControlToOffscreen()
     }
+
     parseBytesIntoMBAndGB(bytes) {
         const mb = bytes / (1024 * 1024)
         // if mb is greater than 1024, then convert to GB
@@ -24,6 +26,7 @@ export default class View {
         }
         return `${Math.round(mb)}MB`
     }
+
     configureBtnUploadClick() {
 
         this.#btnUploadVideo.addEventListener('click', () => {
@@ -32,6 +35,7 @@ export default class View {
         })
 
     }
+
     onChange(fn) {
         return e => {
 
@@ -52,7 +56,20 @@ export default class View {
     updateElapsedTime(text) {
         this.#elapsed.innerText = text
     }
+
     configureOnFileChange(fn) {
         this.#fileUpload.addEventListener('change', this.onChange(fn))
+    }
+
+    downloadBlobAsFile(buffers, filename) {
+        const blob = new Blob(buffers, { type: 'video/webm' })
+        const blobUrl = URL.createObjectURL(blob)
+
+        const a = document.createElement('a')
+        a.href = blobUrl
+        a.download = filename
+        a.click()
+
+        URL.revokeObjectURL(blobUrl)
     }
 }
